@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "886308D4-8034-484C-A929-A3DDDEAF33B3"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "589E3852-83D9-4AE1-B13F-D8C8E0A34C53"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "dimensionally/dimensionallyApp.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "47"
+            endingLineNumber = "47"
+            landmarkName = "convertGrayscaleImageToPixelBuffer(imagePath:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "589E3852-83D9-4AE1-B13F-D8C8E0A34C53 - 5135263b450e86bb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dimensionally.dimensionallyApp.convertGrayscaleImageToPixelBuffer(imagePath: Swift.String) -&gt; Swift.Optional&lt;dimensionally.ImageRes&gt;"
+                  moduleName = "dimensionally"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/herk/Projects/visionViewer/dimensionally/dimensionally/dimensionallyApp.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "47"
+                  endingLineNumber = "47"
+                  offsetFromSymbolStart = "988">
+               </Location>
+               <Location
+                  uuid = "589E3852-83D9-4AE1-B13F-D8C8E0A34C53 - 7344d60e72c708e6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "dimensionally.dimensionallyApp.init() -&gt; dimensionally.dimensionallyApp"
+                  moduleName = "dimensionally"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/herk/Projects/visionViewer/dimensionally/dimensionally/dimensionallyApp.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "112"
+                  endingLineNumber = "112"
+                  offsetFromSymbolStart = "28">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
