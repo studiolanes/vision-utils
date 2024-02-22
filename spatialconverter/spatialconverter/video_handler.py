@@ -5,12 +5,12 @@ import cv2
 import os
 from transformers import pipeline, Pipeline
 from PIL import Image, ImageChops
-from depthmodels.timer import timing
 from moviepy.editor import ImageSequenceClip
 from torch.multiprocessing import Pool, Process, set_start_method, cpu_count
 from collections import namedtuple
 from typing import List
-from depthmodels.file_mixin import FileMixin
+from spatialconverter.file_mixin import FileMixin
+from spatialconverter.timer import timing
 
 set_start_method("spawn", force=True)
 
@@ -140,7 +140,7 @@ class VideoHandler(FileMixin):
         # Use the number of cpus that your computer has. This doesn't work on all systems
         # but we're using this as an approximation to parallelize running on each frame
         multi_pool = Pool(processes=cpu_count())
-        output = multi_pool.map(self.create_over_under_video_frame, frames[:20])
+        output = multi_pool.map(self.create_over_under_video_frame, frames)
         multi_pool.close()
         multi_pool.join()
 

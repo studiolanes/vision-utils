@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "depthmodels"
+name = "spatialconverter"
 version = "0.1.0"
 description = ""
 authors = ["Herrick Fang <herrickfang@gmail.com>"]

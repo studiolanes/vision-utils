@@ -1,8 +1,8 @@
 import argparse
 import logging
 import sys
-from depthmodels.image_handler import ImageHandler
-from depthmodels.video_handler import VideoHandler
+from spatialconverter.image_handler import ImageHandler
+from spatialconverter.video_handler import VideoHandler
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 

@@ -8,7 +8,7 @@ import logging
 import numpy as np
 import scipy
 import cv2
-from depthmodels.file_mixin import FileMixin
+from spatialconverter.file_mixin import FileMixin
 
 
 class ImageHandler(FileMixin):

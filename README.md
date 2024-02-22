@@ -26,16 +26,15 @@ brew install spatial
 cd spatialconverter
 poetry install
 poetry shell
-# Poetry breaks when trying to install from source, so do this the first time
+# Poetry breaks when trying to install transformers from source, so run this installation the first time
 pip install -q git+https://github.com/huggingface/transformers.git
 ```
-
 
 ### Subsequent runs
 
 ```bash
-cd depthmodels/depthmodels
+cd spatialconverter/spatialconverter
 poetry shell
+python main.py --photo /Users/herk/Downloads/photo.png
 # python main.py --video /Users/herk/Downloads/skydive.mp4
-# python main.py --photo /Users/herk/Downloads/photo.png
 ```
