@@ -140,7 +140,7 @@ class VideoHandler(FileMixin):
         # Use the number of cpus that your computer has. This doesn't work on all systems
         # but we're using this as an approximation to parallelize running on each frame
         multi_pool = Pool(processes=cpu_count())
-        output = multi_pool.map(self.create_over_under_video_frame, frames)
+        output = multi_pool.map(self.create_over_under_video_frame, frames[:10])
         multi_pool.close()
         multi_pool.join()
 
@@ -152,5 +152,5 @@ class VideoHandler(FileMixin):
         )
 
         logging.info("Running OS process")
-        command = f"spatial make -i {self.over_under_video_filename()} -f ou -o {self.spatial_video_filename()} --args {os.getcwd()}/iPhone15Pro.args"
+        command = f"./spatial make -i {self.over_under_video_filename()} -f ou -o {self.spatial_video_filename()} --args ./iPhone15Pro.args"
         os.system(command)

@@ -19,10 +19,12 @@ Convert any jpgs/pngs to spatial photos viewable in the Apple Vision Pro! There 
 
 See [Blog Post](https://blog.studiolanes.com/posts/2d-to-spatial-photos) for more info.
 
-This assumes that you have [poetry](https://github.com/python-poetry/poetry).
+### Dependencies
+We borrow the executable and iphone args from [Mike Swanson](https://blog.mikeswanson.com/spatial) for converting over under videos to spatial videos.
+
+We also assume that you have [poetry](https://github.com/python-poetry/poetry) globally installed for python packaging.
 
 ```bash
-brew install spatial
 cd spatialconverter
 poetry install
 poetry shell
