@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "depthmodels"
+name = "spatialconverter"
 version = "0.1.0"
 description = ""
 authors = ["Herrick Fang <herrickfang@gmail.com>"]
@@ -11,6 +11,7 @@ pillow = "^10.2.0"
 scipy = "^1.12.0"
 opencv-python = "^4.9.0.80"
 torch = "^2.2.0"
+moviepy = "^1.0.3"
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,5 +1,5 @@
 ```
- __   _(_)___(_) ___  _ __    _   _| |_(_) |___ 
+ __   _(_)___(_) ___  _ __    _   _| |_(_) |___
  \ \ / / / __| |/ _ \| '_ \  | | | | __| | / __|
   \ V /| \__ \ | (_) | | | | | |_| | |_| | \__ \
    \_/ |_|___/_|\___/|_| |_|  \__,_|\__|_|_|___/
@@ -10,7 +10,7 @@ This repo contains various projects related to the Vision Pro & visionOS.
 
 ## Contents
 
-- [Convert 2D Photo to Spatial Photo](./depthModels/)
+- [Convert 2D Photo to Spatial Photo](./spatialconverter/)
 - [CLI to generate a stereoscopic image](./picCombiner)
 - [visionOS Icons](./icons)
 
@@ -19,18 +19,24 @@ Convert any jpgs/pngs to spatial photos viewable in the Apple Vision Pro! There 
 
 See [Blog Post](https://blog.studiolanes.com/posts/2d-to-spatial-photos) for more info.
 
-### First time installation/run
+### Dependencies
+We borrow the executable and iphone args from [Mike Swanson](https://blog.mikeswanson.com/spatial) for converting over under videos to spatial videos.
 
-This assumes that you have [poetry](https://github.com/python-poetry/poetry).
+We also assume that you have [poetry](https://github.com/python-poetry/poetry) globally installed for python packaging.
 
 ```bash
-cd depthmodels
+cd spatialconverter
 poetry install
 poetry shell
-# Poetry breaks when trying to install from source, so do this the first time
+# Poetry breaks when trying to install transformers from source, so run this installation the first time
 pip install -q git+https://github.com/huggingface/transformers.git
-cd depthmodels
+```
 
-# Swap the file path to your photo here
-python main.py --file /Users/herk/Downloads/skydive.jpg
+### Subsequent runs
+
+```bash
+cd spatialconverter/spatialconverter
+poetry shell
+python main.py --photo /Users/herk/Downloads/photo.png
+# python main.py --video /Users/herk/Downloads/skydive.mp4
 ```

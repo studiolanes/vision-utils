@@ -1,4 +1,3 @@
-import argparse
 from transformers import pipeline
 from PIL import Image, ImageChops
 from pathlib import Path
@@ -6,33 +5,16 @@ import random
 import string
 import os
 import logging
-import sys
 import numpy as np
 import scipy
 import cv2
+from spatialconverter.file_mixin import FileMixin
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-
-class ImageHandler:
+class ImageHandler(FileMixin):
     def __init__(self, filename: str):
         self.filename = filename
         self.directory = None
-
-    def get_directory_name(self) -> str:
-        """Make an arbitrary folder in the same folder as the original file to store
-        all the images if it doesn't already exist
-        """
-        if self.directory == None:
-            directory = os.path.dirname(self.filename)
-            random_directory_name = "".join(
-                random.choices(string.ascii_uppercase + string.digits, k=10)
-            )
-            new_directory = f"{directory}/{random_directory_name}"
-            print(f"Generating new directory {new_directory}")
-            self.directory = new_directory
-            Path(new_directory).mkdir(parents=True, exist_ok=True)
-        return self.directory
 
     def depth_image_filename(self):
         return f"{self.get_directory_name()}/depth_image.jpg"
@@ -140,16 +122,5 @@ class ImageHandler:
 
         # Run OS process
         logging.info("Running OS process")
-        command = f"../../result/Products/usr/local/bin/picCombiner -l {self.left_image_filename()} -r {self.right_image_filename()} -o {self.output_filename()}"
+        command = f"../../picCombiner/run_picCombiner -l {self.left_image_filename()} -r {self.right_image_filename()} -o {self.output_filename()}"
         os.system(command)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Process 2D Photo")
-    parser.add_argument("--file", type=str, help="a file path")
-
-    args = parser.parse_args()
-    filename = args.file
-
-    image_handler = ImageHandler(filename)
-    image_handler.make_3d_image()
