@@ -32,5 +32,20 @@ pip install -q git+https://github.com/huggingface/transformers.git
 cd depthmodels
 
 # Swap the file path to your photo here
-python main.py --file /Users/herk/Downloads/skydive.jpg
+python main.py --photo /Users/herk/Downloads/skydive.jpg
+```
+
+### General instructions
+
+```bash
+# Inside of the depthmodels folder, run the following
+╰─$ python main.py --help
+usage: main.py [-h] [--photo PHOTO] [--video VIDEO]
+
+Process 2D Photo
+
+options:
+  -h, --help     show this help message and exit
+  --photo PHOTO  a file path to a photo
+  --video VIDEO  a file path to a video
 ```
