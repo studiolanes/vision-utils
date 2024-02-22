@@ -21,5 +21,6 @@ if __name__ == "__main__":
         image_handler.make_3d_image()
     elif video_filename:
         video_handler = VideoHandler(video_filename)
+        video_handler.make_video()
     else:
         logging.info("Please add a photo or video if you want to see anything happen!")
