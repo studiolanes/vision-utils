@@ -55,7 +55,6 @@ class VideoHandler(FileMixin):
             result.append(frame_tuple)
         return result
 
-    @timing
     def shift_image(self, data, shift_amount=10):
         # Ensure depth image is grayscale (for single value)
         data_with_alpha = np.dstack(
@@ -97,7 +96,6 @@ class VideoHandler(FileMixin):
         shifted_image.putalpha(ImageChops.invert(alphas_image))
         return shifted_image
 
-    @timing
     def shift_and_inpaint(self, img, amount):
         shifted = self.shift_image(img, shift_amount=amount).convert("RGB")
         org_img = np.array(shifted)
@@ -117,7 +115,6 @@ class VideoHandler(FileMixin):
         dst = cv2.inpaint(org_img, mask, 3, cv2.INPAINT_NS)
         return dst
 
-    @timing
     def create_over_under_video_frame(self, frame) -> List[FrameData]:
         image, index = frame
         logging.info(f"frame: {index}")
@@ -136,7 +133,7 @@ class VideoHandler(FileMixin):
         # Use the number of cpus that your computer has. This doesn't work on all systems
         # but we're using this as an approximation to parallelize running on each frame
         multi_pool = Pool(processes=cpu_count())
-        output = multi_pool.map(self.create_over_under_video_frame, frames[:10])
+        output = multi_pool.map(self.create_over_under_video_frame, frames)
         multi_pool.close()
         multi_pool.join()
 
