@@ -122,5 +122,5 @@ class ImageHandler(FileMixin):
 
         # Run OS process
         logging.info("Running OS process")
-        command = f"../../result/Products/usr/local/bin/picCombiner -l {self.left_image_filename()} -r {self.right_image_filename()} -o {self.output_filename()}"
+        command = f"../../picCombiner/run_picCombiner -l {self.left_image_filename()} -r {self.right_image_filename()} -o {self.output_filename()}"
         os.system(command)

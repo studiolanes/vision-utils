@@ -1,9 +1,10 @@
 import logging
-from transformers import pipeline, Pipeline
-from PIL import Image, ImageChops
 import numpy as np
 import scipy
 import cv2
+import os
+from transformers import pipeline, Pipeline
+from PIL import Image, ImageChops
 from depthmodels.timer import timing
 from moviepy.editor import ImageSequenceClip
 from torch.multiprocessing import Pool, Process, set_start_method, cpu_count
@@ -24,8 +25,11 @@ class VideoHandler(FileMixin):
         self.pipe = None
         self.fps = fps
 
-    def video_pathname(self):
-        return f"{self.get_directory_name()}/spatial_video.mp4"
+    def over_under_video_filename(self):
+        return f"{self.get_directory_name()}/over_under.mp4"
+
+    def spatial_video_filename(self):
+        return f"{self.get_directory_name()}/spatial_video.mov"
 
     def get_pipe(self) -> Pipeline:
         """
@@ -43,6 +47,7 @@ class VideoHandler(FileMixin):
 
     @timing
     def produce_frames(self):
+        """Return a list of frames that we can processing on 1 by 1"""
         capture = cv2.VideoCapture(self.filename)
         frame_idx = 0
         result = []
@@ -62,12 +67,10 @@ class VideoHandler(FileMixin):
         )
         frame = Image.fromarray(data_with_alpha, "RGBA")
         frame_depth = self.get_pipe()(frame)["depth"]
-        depth_img = frame_depth.convert("L")
-        depth_data = np.array(depth_img)
+        depth_image = frame_depth.convert("L")
+        depth_data = np.array(depth_image)
         deltas = np.array((depth_data / 255.0) * float(shift_amount), dtype=int)
 
-        # This creates the transprent resulting image.
-        # For now, we're dealing with pixel data.
         shifted_data = np.zeros_like(data_with_alpha)
 
         width = frame.width
@@ -96,34 +99,38 @@ class VideoHandler(FileMixin):
         shifted_image.putalpha(ImageChops.invert(alphas_image))
         return shifted_image
 
-    def shift_and_inpaint(self, img, amount):
-        shifted = self.shift_image(img, shift_amount=amount).convert("RGB")
-        org_img = np.array(shifted)
-        damaged_img = np.array(shifted)
+    def inpaint(self, image):
+        org_image = np.array(image)
+        damaged_image = np.array(image)
 
-        # Converting all pixels greater than zero to black while black becomes white
-        # Assuming damaged_img is a NumPy array of shape (height, width, 3)
-        # Calculate the sum along the color channels (axis=2) and compare if greater than 0
-        mask = damaged_img.sum(axis=2) > 0
+        # Convert all pixels greater than zero to black while black becomes white
+        # Assuming damaged_image is a NumPy array of shape (height, width, 3)
+        mask = damaged_image.sum(axis=2) > 0
 
-        # Initialize a new array with the same shape as damaged_img, filled with white pixels
-        new_img = np.ones_like(damaged_img) * 255
-        new_img[mask] = [0, 0, 0]
+        # Initialize a new array with the same shape as damaged_image, filled with white pixels
+        new_image = np.ones_like(damaged_image) * 255
+        new_image[mask] = [0, 0, 0]
 
         # saving the mask
-        mask = cv2.cvtColor(new_img, cv2.COLOR_BGR2GRAY)
-        dst = cv2.inpaint(org_img, mask, 3, cv2.INPAINT_NS)
-        return dst
+        mask = cv2.cvtColor(new_image, cv2.COLOR_BGR2GRAY)
+        inpainted = cv2.inpaint(org_image, mask, 3, cv2.INPAINT_NS)
+        return inpainted
 
     def create_over_under_video_frame(self, frame) -> List[FrameData]:
+        """Stack the converted images on the top and bottom of each other."""
         image, index = frame
         logging.info(f"frame: {index}")
-        left_img = self.shift_and_inpaint(image, 10)
-        right_img = self.shift_and_inpaint(image, 50)
 
-        stacked_img = cv2.vconcat([left_img, right_img])  # Combine images side by side
-        stacked_img = cv2.cvtColor(stacked_img, cv2.COLOR_BGR2RGB)
-        return FrameData(index, stacked_img)
+        # Shift and inpaint images
+        shifted_left_image = self.shift_image(image, 10).convert("RGB")
+        inpainted_left_image = self.inpaint(shifted_left_image)
+        shifted_right_image = self.shift_image(image, 50).convert("RGB")
+        inpainted_right_image = self.inpaint(shifted_right_image)
+
+        # Combine images over and under
+        stacked_image = cv2.vconcat([inpainted_left_image, inpainted_right_image])
+        stacked_image = cv2.cvtColor(stacked_image, cv2.COLOR_BGR2RGB)
+        return FrameData(index, stacked_image)
 
     @timing
     def make_video(self):
@@ -133,11 +140,17 @@ class VideoHandler(FileMixin):
         # Use the number of cpus that your computer has. This doesn't work on all systems
         # but we're using this as an approximation to parallelize running on each frame
         multi_pool = Pool(processes=cpu_count())
-        output = multi_pool.map(self.create_over_under_video_frame, frames)
+        output = multi_pool.map(self.create_over_under_video_frame, frames[:20])
         multi_pool.close()
         multi_pool.join()
 
         # Since we parallelized this, let's re-sort the frames by the index
         sorted_frames = sorted(output, key=lambda x: x.index)
         clip = ImageSequenceClip([obj.frame for obj in sorted_frames], fps=self.fps)
-        clip.write_videofile(self.video_pathname(), codec="libx264", audio=False)
+        clip.write_videofile(
+            self.over_under_video_filename(), codec="libx264", audio=False
+        )
+
+        logging.info("Running OS process")
+        command = f"spatial make -i {self.over_under_video_filename()} -f ou -o {self.spatial_video_filename()} --args {os.getcwd()}/iPhone15Pro.args"
+        os.system(command)

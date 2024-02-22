@@ -1,0 +1,7 @@
+# Common spatial metadata values for iPhone 15 Pro.
+# Add --args <argsfile> to include these parameters (or any you'd like).
+
+--cdist 19.24
+--hfov 63.4
+--hadjust 0.02
+--projection rect
