@@ -6,8 +6,6 @@ import cv2
 
 from moviepy.editor import ImageSequenceClip
 
-SAMPLE_FRAME = "sample.png"
-
 PIPE = None
 
 
@@ -116,12 +114,8 @@ from torch.multiprocessing import Pool, Process, set_start_method
 set_start_method("spawn", force=True)
 
 if __name__ == "__main__":
-    result = []
-
     VIDEO_PATH = "notebooks/sample.mov"
     cap = cv2.VideoCapture(VIDEO_PATH)
-    frame_id = 0
-
     frames = list(read_frames(VIDEO_PATH))
     print("frames to be processed: ", len(frames))
 

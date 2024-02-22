@@ -6,7 +6,6 @@ from depthmodels.video_handler import VideoHandler
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process 2D Photo")
     parser.add_argument("--photo", type=str, help="a file path to a photo")
