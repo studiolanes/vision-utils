@@ -138,7 +138,7 @@ class VideoHandler(FileMixin):
     @timing
     def make_video(self):
         frames = self.produce_frames()
-        logging.info(f"Process frames {len(frames)}")
+        logging.info(f"Processed {len(frames)} frames")
 
         # Use the number of cpus that your computer has. This doesn't work on all systems
         # but we're using this as an approximation to parallelize running on each frame
