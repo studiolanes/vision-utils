@@ -5,7 +5,7 @@ import cv2
 import os
 from transformers import pipeline, Pipeline
 from PIL import Image, ImageChops
-from moviepy.editor import ImageSequenceClip
+from moviepy.editor import ImageSequenceClip, VideoFileClip
 from torch.multiprocessing import Pool, Process, set_start_method, cpu_count
 from collections import namedtuple
 from typing import List
@@ -30,6 +30,9 @@ class VideoHandler(FileMixin):
 
     def spatial_video_filename(self):
         return f"{self.get_directory_name()}/spatial_video.mov"
+
+    def spatial_audio_filename(self):
+        return f"{self.get_directory_name()}/temp-audio.m4a"
 
     def get_pipe(self) -> Pipeline:
         """
@@ -135,7 +138,7 @@ class VideoHandler(FileMixin):
     @timing
     def make_video(self):
         frames = self.produce_frames()
-        logging.info(f"Process frames {len(frames)}")
+        logging.info(f"Processed {len(frames)} frames")
 
         # Use the number of cpus that your computer has. This doesn't work on all systems
         # but we're using this as an approximation to parallelize running on each frame
@@ -147,8 +150,15 @@ class VideoHandler(FileMixin):
         # Since we parallelized this, let's re-sort the frames by the index
         sorted_frames = sorted(output, key=lambda x: x.index)
         clip = ImageSequenceClip([obj.frame for obj in sorted_frames], fps=self.fps)
+        video_clip = VideoFileClip(self.filename)
+        audio = video_clip.audio
+        clip = clip.set_audio(audio)
         clip.write_videofile(
-            self.over_under_video_filename(), codec="libx264", audio=False
+            self.over_under_video_filename(),
+            codec="libx264",
+            audio_codec="aac",
+            temp_audiofile=self.spatial_audio_filename(),
+            remove_temp=True,
         )
 
         logging.info("Running OS process")
