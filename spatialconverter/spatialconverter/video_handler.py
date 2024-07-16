@@ -36,15 +36,15 @@ class VideoHandler(FileMixin):
 
     def get_pipe(self) -> Pipeline:
         """
-        Taken from https://github.com/LiheYoung/Depth-Anything. Note that we use the
-        depth-anything-small-hf model because it runs faster since it's a small model. Feel
+        Taken from https://github.com/DepthAnything/Depth-Anything-V2. Note that we use the
+        depth-anything-v2-small-hf model because it runs faster since it's a small model. Feel
         free to swap out this model with the larger one if you want a higher quality output.
         We also haven't change any of the parameters and that could improve the estimation as well.
         """
         if self.pipe is None:
             # Main depth estimation model
             self.pipe = pipeline(
-                task="depth-estimation", model="LiheYoung/depth-anything-small-hf"
+                task="depth-estimation", model="depth-anything/Depth-Anything-V2-Small-hf"
             )
         return self.pipe
 
