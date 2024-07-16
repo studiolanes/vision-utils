@@ -32,12 +32,12 @@ class ImageHandler(FileMixin):
         """Generate a depth image and save it in a folder inside a newgg folder.
 
         Update the pipeline information below to use different models.
-        See https://huggingface.co/docs/transformers/main/en/model_doc/depth_anything for other
-        possible models, e.g. "LiheYoung/depth-anything-small-hf"
+        See https://huggingface.co/docs/transformers/main/en/model_doc/depth_anything_v2 for other
+        possible models, e.g. "depth-anything/Depth-Anything-V2-small-hf"
         """
         logging.info("Generating depth image. This might take long...")
         pipe = pipeline(
-            task="depth-estimation", model="LiheYoung/depth-anything-large-hf"
+            task="depth-estimation", model="depth-anything/Depth-Anything-V2-large-hf"
         )
         image = Image.open(self.filename)
         depth_image = pipe(image)["depth"]
